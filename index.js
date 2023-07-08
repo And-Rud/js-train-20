@@ -43,15 +43,15 @@ function Vehicle({ brand = null, model = null, year = null, mileage = null }) {
  */
 
 //Створюємо Car - це ще один конструктор, який наслідує властивості і методи з Vehicle за допомогою функції apply.
-function Car(
+function Car({
   brand = null,
   model = null,
   year = null,
   mileage = null,
   fuelType = null,
-  speed = null
-) {
-  Vehicle.apply(this, [brand, model, year, mileage]);
+  speed = null,
+}) {
+  Vehicle.apply(this, [{ brand, model, year, mileage }]);
   this.fuelType = fuelType;
   this.speed = speed;
   this.toString = function () {
@@ -128,7 +128,7 @@ car.break(20);
  */
 
 // Конструктор Truck наслідуємо Vehicle викликавши його в конструкторі з call
-function Truck(
+function Truck({
   brand,
   model,
   year,
@@ -139,11 +139,11 @@ function Truck(
   fuelType,
   transmissionType,
   doors,
-  weight
-) {
+  weight,
+}) {
   // Викликаємо Vehicle.call та передаємо в нього: this, brand, model, year, mileage
   //  Записуєм в this.color значення аргументу color, в this.engineType значення аргументу engineType і так далі зі всіми аргументами
-  Vehicle.call(this, brand, model, year, mileage);
+  Vehicle.call(this, { brand, model, year, mileage });
   this.color = color;
   this.engineType = engineType;
   this.towingCapacity = towingCapacity;
@@ -195,11 +195,10 @@ const myTruck = {
   weight: 5600,
 };
 let truck = new Truck(myTruck);
-let lowSpec = truck.specific.bind(Truck, 5000);
-lowSpec();
+truck.specific(5000);
+
 // Викликаємо метод tow з вагою меншою за towingCapacity
-let highSpec = truck.specific.bind(Truck, 150000);
-highSpec();
+truck.specific(150000);
 // Викликаємо метод tow з вагою більшою за towingCapacity
 
 // Додаємо метод drive для прототипу Car, який збільшує kilometers на передане число, та виводить Подорожуємо <kilometers> кілометрів у <brand> <model>.
@@ -229,9 +228,9 @@ dri(100);
  * | batteryCapacity|
  */
 
-function ElectricCar(brand, model, year, mileage, batteryCapacity) {
+function ElectricCar({ brand, model, year, mileage, batteryCapacity }) {
   if (new.target) {
-    Car.call(this, brand, model, year, mileage);
+    Car.call(this, { brand, model, year, mileage });
     this.batteryCapacity = batteryCapacity;
     this.toString = function () {
       console.log(
@@ -271,5 +270,4 @@ const ElectricCarData = {
 };
 let electricCar = new ElectricCar(ElectricCarData);
 electricCar.toString();
-
 // Викликаємо метод toString об'єкту tesla та виводимо в консоль
